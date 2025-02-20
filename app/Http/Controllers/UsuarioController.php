@@ -18,39 +18,44 @@ class UsuarioController extends Controller
 
     public function SalvarUsuario(Request $request)
     {
+        //validação
         $request->validate([
             'nome' => 'required',
             'email' => 'required|email',
             'senha' => 'required|min:6',
         ]);
 
-       User::created([
+
+        //salvar
+       User::create([
 
             'name' => $request->nome,
             'email' => $request->email,
             'password' => bcrypt($request->senha),
        ]);
+     
 
+        //redirecionar
         return redirect('trabalho');
     }
 
-    public function LoginUsuario()
+    public function LoginUsuario(Request $request)
     {
-        return view('site/LoginUsuario');
-    }
-    public function AutenticarUsuario(Request $request)
-    {
+        //validação
         $request->validate([
             'email' => 'required|email',
-            'senha' => 'required|min:6',
+            'password' => 'required|min:6',
         ]);
-        
+      
+        //tentativa de login
         if (Auth::attempt($request->only('email', 'senha'))) {
+            //return redirect()->route('trabalho');
             return redirect('trabalho');
         }
 
         return back()->withErrors([
             'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
         ]);
+    
     }
 }
