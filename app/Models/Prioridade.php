@@ -6,15 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prioridade extends Model
 {
-    private $prioridade=['Baixa','Média','Alta','Urgente'];
-
-    public function getPrioridade(){
-        return $this->prioridade;
-    }
-
-    public function getPrioridadePorId($id){
-        return $this->prioridade[$id];
-    }
+    protected $table = '_prioridade';
+    
 
     protected $fillable = [
         'id',

@@ -6,13 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tarefas extends Model
 {
-    private $status=['Pendente','Concluída','Em andamento'];
-    public function getStatus(){
-        return $this->status;
-    }
-    public function getStatusPorId($id){
-        return $this->status[$id];
-    }
+    
+
+    protected $table = '_tarefas';
     
     protected $fillable = [
         'id',

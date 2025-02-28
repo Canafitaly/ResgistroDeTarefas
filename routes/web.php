@@ -2,26 +2,29 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\UsuarioController;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Route;
+//rotoa de welcome
+Route::get('/', function () {
+    return view('welcome');
+});
+//rota de inicio 
+Route::get('/dashboard', function () {
+     return view('dashboard');
+ })->middleware(['auth', 'verified'])->name('dashboard');
 
-//inicio/cadstro
-Route::get('/',  [UsuarioController::class, 'CadasroUsuario']);
 
-//rota dos dados de cadastramento
-Route::post('salva', [UsuarioController::class, 'SalvarUsuario'])->name('salva');
+//rota de tarefas
+ Route::resource('padaria', SiteController::class)->middleware(['auth', 'verified']);
 
-//rota de login
-Route::get('login', function(){
-    return view('/site/LoginUsuario');
-})->name('log');
+ //rota de perfil
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-//rota dos dados de login
-Route::post('logar', [UsuarioController::class, 'LoginUsuario'])->name('logar');
 
-//rota do serviço principal
-Route::get('trabalho', function () {
-    return view('/site/Trabalho');
-})->name('trabalho');
+require __DIR__.'/auth.php';
 
-Route::get('novotrabalho',[SiteController::class,'index'])->name('novotrabalho');
