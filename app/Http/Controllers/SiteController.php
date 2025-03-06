@@ -62,17 +62,28 @@ class SiteController extends Controller
      // Fim criar tarefa-----------------------------------------------------------------------------------------------------
 
 
-
-    public function show($id)
+     //pesquisando tarefa-----------------------------------------------------------------------------------------------------
+    public function show(Request $request)
     {
-        
-        //Busca a tarefa pelo id
-        $tarefa = Tarefas::find($id);
-
-        //Retorna a view show.blade.php com a tarefa
-        return view('Atualizando',compact('tarefa'));
+        $query = Tarefas::query();
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('titulo', 'LIKE', "%{$search}%")
+                  ->orWhere('descricao', 'LIKE', "%{$search}%")
+                  ->orWhere('status', 'LIKE', "%{$search}%")
+                  ->orWhereHas('categoria', function ($q) use ($search) {
+                      $q->where('categoria', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('prioridade', function ($q) use ($search) {
+                      $q->where('prioridade', 'LIKE', "%{$search}%");
+                  });
+        }
+    
+        $tarefas = $query->get();
+    
+        return view('tarefas', compact('tarefas'));
     }
-
+     //fim pesquisa-------------------------------------------------------------------------------------------------------------------
 
 
       // Função para atualizar tarefa-----------------------------------------------------------------------------------------
@@ -133,4 +144,6 @@ class SiteController extends Controller
     }
 
     // Fim destruir tarefa-----------------------------------------------------------------------------------------------------
+    
+    
 }

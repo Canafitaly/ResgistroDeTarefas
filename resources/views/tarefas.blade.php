@@ -19,9 +19,20 @@
           </ul>
         </div>
     </nav>
+    {{-- barra de pesquisa --}}
+    <div class="container">
+        <form action="{{route('padaria.show','search')}}" method="get">
+            <div class="input-field">
+                <input type="text" name="search" id="search" value="{{ request()->query('search')}}">
+                <label for="search">Pesquisar Tarefas</label>
+            </div>
+            <button type="submit" class="btn">Pesquisar</button>
+        </form>
+    </div>
+
     {{-- tabela --}}
     <div class="container">
-        <h3 class="center-align">Lista de Tarefas</h3>
+        <h3 class="center-align">Lista de Tarefas({{$tarefas->count()}})</h3>
         <table class="highlight">
             <thead>
                 <tr>
@@ -50,7 +61,7 @@
                                 <button type="submit" class="btn red">Delete</button>
                               </form>
                         </td>
-                        {{-- botão --}}
+                        {{-- botão atualizar --}}
                         <td>
                             <form action="{{ route('padaria.edit', $tarefa->id) }}" method="post">
                             @csrf
